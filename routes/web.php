@@ -14,8 +14,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth/login');
 });
+
+use App\Http\Controllers\ProductManagerController;
+Route::get('/product-manager', [ProductManagerController::class, 'index']);
 
 Route::middleware([
     'auth:sanctum',
@@ -26,3 +29,4 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
