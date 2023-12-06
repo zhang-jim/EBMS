@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->decimal('price', 10, 2)->default(0.00); // 使用 decimal，設置預設值
-            $table->integer('inventory')->default(0); // 使用 integer，設置預設值
+            $table->decimal('price', 10, 2);
+            $table->integer('inventory');
+            $table->string('image')->nullable(); // 新增的圖片欄位，允許為空
             $table->timestamps();
         });
     }
