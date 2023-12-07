@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete(); 
             $table->string('name');
+            $table->text('description')->default('');
             $table->decimal('price', 10, 2);
-            $table->integer('inventory');
-            $table->string('image')->nullable(); // 新增的圖片欄位，允許為空
+            $table->integer('inventory')->default(0);
+            $table->string('category')->default('Uncategorized');
+            $table->boolean('is_published')->default(false);
+            $table->integer('sales_quantity')->default(0);
             $table->timestamps();
         });
     }

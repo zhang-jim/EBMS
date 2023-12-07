@@ -1,65 +1,51 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import ProductList from '@/Components/ProductList.vue';
-import InputError from '@/Components/InputError.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { useForm, Head } from '@inertiajs/vue3';
+import Dropdown from '@/Components/Dropdown.vue';
+import DropdownLink from '@/Components/DropdownLink.vue';
+import {Head } from '@inertiajs/vue3';
 
 defineProps(['productData']);
-
-const form = useForm({
-    name: '',
-    price: 0,
-    inventory: 0,
-});
 </script>
 
 <template>
     <Head title="Add Product" />
-
     <AuthenticatedLayout>
-        <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
-            <form @submit.prevent="form.post(route('product.store'), { onSuccess: () => form.reset() })"
-                class="flex flex-col">
-                <div class="flex mb-4">
-                    <!-- 商品名稱 -->
-                    <div class="w-1/3">
-                        <label for="name" class="block text-sm font-medium text-gray-700">商品名稱</label>
-                        <input v-model="form.name" type="text" id="name"
-                            class="mt-1 p-2 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
-                        <InputError :message="form.errors.name" class="mt-2" />
-                    </div>
-                    
-                    <!-- 價錢 -->
-                    <div class="w-1/3 ml-4">
-                        <label for="price" class="block text-sm font-medium text-gray-700">價錢</label>
-                        <input v-model="form.price" type="number" id="price"
-                            class="mt-1 p-2 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
-                        <InputError :message="form.errors.price" class="mt-2" />
-                    </div>
-
-                    <!-- 庫存 -->
-                    <div class="w-1/3 ml-4">
-                        <label for="inventory" class="block text-sm font-medium text-gray-700">庫存</label>
-                        <input v-model="form.inventory" type="number" id="inventory"
-                            class="mt-1 p-2 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
-                        <InputError :message="form.errors.inventory" class="mt-2" />
-                    </div>
-
-                    <!-- 圖片上傳 -->
-                    <div class="mb-4">
-                        <label for="image" class="block text-sm font-medium text-gray-700">商品圖片</label>
-                        <input type="file" id="image" name="image" accept="image/*"
-                            class="mt-1 p-2 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+        <div v-for="product in productData" :key="product.id" :productData="product"
+            class="mt-6 bg-white shadow-sm rounded-lg divide-y">
+            <div class="p-6 flex space-x-2">
+                <div class="flex-1">
+                    <div class="flex items-center">
+                        <ul>
+                            <li class="text-gray-800">商品名稱：{{ product.name }}</li>
+                            <li class="text-gray-800">價格：{{ product.price }}</li>
+                            <li class="text-gray-800">庫存：{{ product.inventory }}</li>
+                        </ul>
+                        <Dropdown>
+                            <template #trigger>
+                                <button>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path
+                                            d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                    </svg>
+                                </button>
+                            </template>
+                            <template #content>
+                                <button
+                                    class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:bg-gray-100 transition duration-150 ease-in-out"
+                                    @click="editing = true">
+                                    Edit
+                                </button>
+                                <DropdownLink as="button" :href="route('product.destroy', product.id)" method="delete">
+                                    Delete
+                                </DropdownLink>
+                            </template>
+                        </Dropdown>
                     </div>
                 </div>
-
-                <PrimaryButton class="mt-4">新增</PrimaryButton>
-            </form>
-
-            <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
-                <ProductList v-for="product in productData" :key="product.id" :product="product" />
             </div>
         </div>
     </AuthenticatedLayout>
 </template>
+
+

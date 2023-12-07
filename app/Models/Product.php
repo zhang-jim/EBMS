@@ -13,8 +13,11 @@ class Product extends Model
         'name',
         'price',
         'inventory',
-        'image',
     ];
+    public function images()
+    {
+        return $this->hasMany(ProductImages::class);
+    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
