@@ -43,10 +43,12 @@ class ProductImagesController extends Controller
         $validated['path'] = $path;
 
         // 在當前使用者的上下文中創建產品
-        $product = $request->user()->products()->create($request->only(['name', 'price', 'inventory']));
+        // $product = $request->user()->products()->create($request->only(['name', 'price', 'inventory','description']));
+
+        $product = ProductImagesController::create($validated);
 
         // 創建與產品關聯的圖片記錄
-        $product->images()->create($validated);
+        // $product->images()->create($validated);
 
         return response()->json(['message' => 'Product image uploaded successfully'], 201);
     }

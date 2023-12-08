@@ -22,8 +22,9 @@ class ProductController extends Controller
      */
     public function index(): Response
     {
-        return Inertia::render('Product/create', [
-            'productData' => Product::with('user:id,name')->latest()->get(),
+        // 將資料傳遞到前端（使用 Vue.js 3）
+        return Inertia::render('Product/Index', [
+            'productData' => Product::with('productImages')->latest()->get(),
         ]);
     }
 
@@ -45,12 +46,13 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
             'inventory' => 'required|integer',
+            'description' => 'nullable|string|max:1000',
         ]);
 
-        $this->productImagesController->store($request);
+        $product = Product::create($request->only(['name', 'price', 'inventory', 'description']));
 
         // 重定向到產品管理頁
-        return redirect(route('product.index'));
+        // return redirect(route('product.index'));
     }
 
 
@@ -81,6 +83,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
             'inventory' => 'required|integer',
+            'description' => 'nullable|string|max:1000',
         ]);
 
         $product->update($validated);

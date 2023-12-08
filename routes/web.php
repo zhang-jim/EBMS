@@ -30,12 +30,12 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resource('product', ProductController::class)
-    ->only(['index', 'store','update','destroy'])
-    ->middleware(['auth', 'verified']);
-    
-Route::resource('product/create', ProductController::class)
-    ->only(['index'])
+Route::get('/product/create', function () {
+    return Inertia::render('Product/Create');
+})->middleware(['auth', 'verified'])->name('prodect-create');
+
+Route::resource('/product', ProductController::class)
+    ->only(['index', 'store', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
 
 Route::middleware('auth')->group(function () {
@@ -44,4 +44,5 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+
+require __DIR__ . '/auth.php';

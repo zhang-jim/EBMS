@@ -13,13 +13,14 @@ class Product extends Model
         'name',
         'price',
         'inventory',
+        'description',
     ];
     public function images()
     {
-        return $this->hasMany(ProductImages::class);
+        return $this->hasMany(ProductImages::class,'product_id');
     }
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
+    // public function user(): BelongsTo
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
 }
