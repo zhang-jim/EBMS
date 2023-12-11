@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,12 +14,8 @@ class Product extends Model
         'inventory',
         'description',
     ];
-    public function images()
+    public function productImages()
     {
-        return $this->hasMany(ProductImages::class,'product_id');
+        return $this->hasMany(ProductImage::class);
     }
-    // public function user(): BelongsTo
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
 }

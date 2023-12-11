@@ -4,9 +4,9 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+
+import { useForm, Head } from '@inertiajs/vue3';
+import { ref, watch, onMounted } from 'vue';
 defineProps(['productData']);
 
 const isEditing = ref(false);
@@ -34,6 +34,21 @@ const handleCancel = () => {
     form.reset();
     form.clearErrors();
 };
+//圖片預覽功能
+const previewImageUrl = ref(null);
+onMounted(() => {
+    watch(() => form.image, (newImage) => {
+        if (newImage) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImageUrl.value = e.target.result;
+            };
+            reader.readAsDataURL(newImage);
+        } else {
+            previewImageUrl.value = null;
+        }
+    });
+});
 </script>
 
 <template>
@@ -46,7 +61,6 @@ const handleCancel = () => {
                     <th class="p-3">商品描述</th>
                     <th class="p-3">價格</th>
                     <th class="p-3">庫存</th>
-                    <th class="p-3">圖片</th>
                     <th class="p-3">操作</th>
                 </tr>
             </thead>
@@ -54,11 +68,8 @@ const handleCancel = () => {
                 <tr v-for="product in productData" :key="product.id" :product="product">
                     <td class="p-3">{{ product.name }}</td>
                     <td class="p-3">{{ product.description }}</td>
-                    <td class="p-3">{{ product.price }}</td>
+                    <td class="p-3">{{ product.price + "元" }}</td>
                     <td class="p-3">{{ product.inventory }}</td>
-                    <td class="p-3">
-                        <img :src="product.image" alt="Product Image" class="w-16 h-16 object-cover rounded-full">
-                    </td>
                     <td class="p-3">
                         <Dropdown>
                             <template #trigger>
@@ -123,10 +134,10 @@ const handleCancel = () => {
                         class="mt-1 p-2 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
                     <InputError :message="form.errors.image" class="mt-2" />
                 </div>
-                <div class="mt-4" v-if="form.image">
+
+                <div v-if="previewImageUrl" class="mt-4">
                     <label class="block text-sm font-medium text-gray-700">預覽</label>
-                    <img :src="URL.createObjectURL(form.image)" alt="Preview"
-                        class="mt-1 w-16 h-16 object-cover rounded-full">
+                    <img :src="previewImageUrl" alt="Preview" class="mt-1 w-full rounded-md shadow-sm">
                 </div>
 
                 <div class="space-x-2 mt-4">

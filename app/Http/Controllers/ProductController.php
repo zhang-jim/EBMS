@@ -12,17 +12,12 @@ use Inertia\Response;
 
 class ProductController extends Controller
 {
-    protected $productImagesController;
-    public function __construct(ProductImagesController $productImagesController)
-    {
-        $this->productImagesController = $productImagesController;
-    }
     /**
      * Display a listing of the resource.
      */
     public function index(): Response
     {
-        // 將資料傳遞到前端（使用 Vue.js 3）
+        //將商品列表關聯圖片一起抓出，回傳到前端
         return Inertia::render('Product/Index', [
             'productData' => Product::with('productImages')->latest()->get(),
         ]);
@@ -48,11 +43,14 @@ class ProductController extends Controller
             'inventory' => 'required|integer',
             'description' => 'nullable|string|max:1000',
         ]);
+        // 新增商品資料
+        $product = Product::create($validated);
 
-        $product = Product::create($request->only(['name', 'price', 'inventory', 'description']));
+        //將新增資訊傳遞給ProductImagesController進行圖片資料新增
+        app(ProductImagesController::class)->store($request, $product->id);
 
         // 重定向到產品管理頁
-        // return redirect(route('product.index'));
+        return redirect(route('product.index'));
     }
 
 
@@ -77,8 +75,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product): RedirectResponse
     {
-        $this->authorize('update', $product);
-
+        // 數據驗證
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
@@ -86,8 +83,10 @@ class ProductController extends Controller
             'description' => 'nullable|string|max:1000',
         ]);
 
+        //更新商品資訊
         $product->update($validated);
 
+        // 重定向到產品管理頁
         return redirect(route('product.index'));
     }
 
@@ -96,10 +95,13 @@ class ProductController extends Controller
      */
     public function destroy(Product $product): RedirectResponse
     {
-        $this->authorize('delete', $product);
+        // 使用授權（Policy）檢查使用者是否有權刪除該商品
+        // $this->authorize('delete', $product);
 
+        // 刪除商品
         $product->delete();
 
+        // 重定向到產品管理頁
         return redirect(route('product.index'));
     }
 }

@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProductImages;
+use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
 
 class ProductImagesController extends Controller
@@ -26,12 +27,19 @@ class ProductImagesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $product_id)
     {
         // 數據驗證
         $validated = $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        // 確保商品存在
+        $product = Product::find($product_id);
+
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
 
         // 獲取上傳的檔案
         $uploadedFile = $request->file('image');
@@ -42,13 +50,8 @@ class ProductImagesController extends Controller
         // 將路徑添加到 $validated 數組中
         $validated['path'] = $path;
 
-        // 在當前使用者的上下文中創建產品
-        // $product = $request->user()->products()->create($request->only(['name', 'price', 'inventory','description']));
-
-        $product = ProductImagesController::create($validated);
-
-        // 創建與產品關聯的圖片記錄
-        // $product->images()->create($validated);
+        // 將資料庫新增的動作移至 Product 模型的 productImages 關聯
+        $product->productImages()->create($validated);
 
         return response()->json(['message' => 'Product image uploaded successfully'], 201);
     }
@@ -57,7 +60,7 @@ class ProductImagesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProductImages $productImages)
+    public function show(ProductImage $productImages)
     {
         //
     }
@@ -65,7 +68,7 @@ class ProductImagesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProductImages $productImages)
+    public function edit(ProductImage $productImages)
     {
         //
     }
@@ -73,15 +76,16 @@ class ProductImagesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ProductImages $productImages)
+    public function update(Request $request, ProductImage $productImage)
     {
         //
     }
 
+
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductImages $productImages)
+    public function destroy(ProductImage $productImages)
     {
         //
     }
