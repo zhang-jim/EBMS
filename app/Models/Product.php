@@ -8,14 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
+    protected $table = 'products';
     protected $fillable = [ //定義可進行質量賦值的屬性
         'name',
+        'description',
         'price',
         'inventory',
-        'description',
+        'image',
     ];
-    public function productImages()
-    {
-        return $this->hasMany(ProductImage::class);
-    }
 }

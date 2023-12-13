@@ -30,13 +30,20 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/product/create', function () {
-    return Inertia::render('Product/Create');
-})->middleware(['auth', 'verified'])->name('prodect-create');
+// Route::get('/product/create', function () {
+//     return Inertia::render('Product/Create');
+// })->middleware(['auth', 'verified'])->name('prodect-create');
 
-Route::resource('/product', ProductController::class)
-    ->only(['index', 'store', 'update', 'destroy'])
-    ->middleware(['auth', 'verified']);
+// Route::resource('/product', ProductController::class)
+//     ->only(['index', 'store', 'update', 'destroy'])
+//     ->middleware(['auth', 'verified']);
+
+Route::get('product',[ProductController::class, 'index']);
+Route::get('product/create',[ProductController::class, 'create']);
+Route::post('product/create',[ProductController::class, 'store']);
+Route::get('product/{id}/edit',[ProductController::class, 'edit']);
+Route::put('product/{id}',[ProductController::class, 'update']);
+Route::get('product/{id}',[ProductController::class, 'destroy']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

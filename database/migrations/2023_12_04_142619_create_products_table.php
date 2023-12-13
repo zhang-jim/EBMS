@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('description')->default('');
             $table->decimal('price', 10, 2);
             $table->integer('inventory')->default(0);
+            $table->string('image');
             $table->string('category')->default('Uncategorized');
             $table->boolean('is_published')->default(false);
             $table->integer('sales_quantity')->default(0);

@@ -61,6 +61,7 @@ onMounted(() => {
                     <th class="p-3">商品描述</th>
                     <th class="p-3">價格</th>
                     <th class="p-3">庫存</th>
+                    <!-- <th class="p-3">圖片</th> -->
                     <th class="p-3">操作</th>
                 </tr>
             </thead>
@@ -70,6 +71,9 @@ onMounted(() => {
                     <td class="p-3">{{ product.description }}</td>
                     <td class="p-3">{{ product.price + "元" }}</td>
                     <td class="p-3">{{ product.inventory }}</td>
+                    <!-- <td class="p-3">
+                            <img :src="'/storage/'+product['product_images'][0].path" alt="Product Image">
+                    </td> -->
                     <td class="p-3">
                         <Dropdown>
                             <template #trigger>
@@ -98,33 +102,35 @@ onMounted(() => {
         </table>
         <div class="w-4/5 mx-auto">
             <form v-if="isEditing"
-                @submit.prevent="form.put(route('product.update', editingProductId), { onSuccess: () => isEditing = false })">
+                @submit.prevent="form.patch(route('product.update', editingProductId), { onSuccess: () => isEditing = false })"
+                enctype="multipart/form-data">
+
                 <div class="mt-4">
                     <label for="name" class="block text-sm font-medium text-gray-700">商品名稱</label>
-                    <input v-model="form.name" type="text" id="name"
+                    <input v-model=" form.name " type="text" id="name"
                         class="mt-1 p-2 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
-                    <InputError :message="form.errors.name" class="mt-2" />
+                    <InputError :message=" form.errors.name " class="mt-2" />
                 </div>
 
                 <div class="mt-4">
                     <label for="description" class="block text-sm font-medium text-gray-700">商品描述</label>
-                    <textarea v-model="form.description" id="description" rows="4"
+                    <textarea v-model=" form.description " id="description" rows="4"
                         class="mt-1 p-2 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"></textarea>
-                    <InputError :message="form.errors.description" class="mt-2" />
+                    <InputError :message=" form.errors.description " class="mt-2" />
                 </div>
 
                 <div class="mt-4">
                     <label for="price" class="block text-sm font-medium text-gray-700">價格</label>
-                    <input v-model="form.price" type="number" id="price"
+                    <input v-model=" form.price " type="number" id="price"
                         class="mt-1 p-2 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
-                    <InputError :message="form.errors.price" class="mt-2" />
+                    <InputError :message=" form.errors.price " class="mt-2" />
                 </div>
 
                 <div class="mt-4">
                     <label for="inventory" class="block text-sm font-medium text-gray-700">庫存</label>
-                    <input v-model="form.inventory" type="number" id="inventory"
+                    <input v-model=" form.inventory " type="number" id="inventory"
                         class="mt-1 p-2 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
-                    <InputError :message="form.errors.inventory" class="mt-2" />
+                    <InputError :message=" form.errors.inventory " class="mt-2" />
                 </div>
 
                 <div class="mt-4">
@@ -132,12 +138,12 @@ onMounted(() => {
                     <input type="file" id="image" name="image" accept="image/*"
                         @change="form.image = $event.target.files[0]"
                         class="mt-1 p-2 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
-                    <InputError :message="form.errors.image" class="mt-2" />
+                    <InputError :message=" form.errors.image " class="mt-2" />
                 </div>
 
-                <div v-if="previewImageUrl" class="mt-4">
+                <div v-if=" previewImageUrl " class="mt-4">
                     <label class="block text-sm font-medium text-gray-700">預覽</label>
-                    <img :src="previewImageUrl" alt="Preview" class="mt-1 w-full rounded-md shadow-sm">
+                    <img :src=" previewImageUrl " alt="Preview" class="mt-1 rounded-md shadow-sm">
                 </div>
 
                 <div class="space-x-2 mt-4">
