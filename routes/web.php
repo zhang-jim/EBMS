@@ -42,8 +42,11 @@ Route::get('product',[ProductController::class, 'index']);
 Route::get('product/create',[ProductController::class, 'create']);
 Route::post('product/create',[ProductController::class, 'store']);
 Route::get('product/{id}/edit',[ProductController::class, 'edit']);
-Route::put('product/{id}',[ProductController::class, 'update']);
-Route::get('product/{id}',[ProductController::class, 'destroy']);
+// Route::put('product/{id}',[ProductController::class, 'update']);
+// Route::get('product/{id}',[ProductController::class, 'destroy']);
+// Route::get('product/{id}/look',[ProductController::class, 'show']);
+Route::get('/product/{product}', [ProductController::class, 'show']);
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

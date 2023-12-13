@@ -40,6 +40,9 @@
                                     <td>
                                         <a href="{{ url('product/'.$item->id) }}">Delete</a>
                                     </td>
+                                    <td>
+                                        <a href="{{ url('product/'.$item->id) }}">show</a>
+                                    </td>
                                 </tr>
                             @endforeach
 
